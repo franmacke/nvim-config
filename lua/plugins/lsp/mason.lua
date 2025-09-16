@@ -2,7 +2,7 @@
 return {
   {
     "williamboman/mason.nvim",
-    build = ":MasonUpdate",     -- Update packages on install/update
+    build = ":MasonUpdate",
     config = function()
       require("mason").setup({
         ui = {
@@ -23,40 +23,44 @@ return {
       "neovim/nvim-lspconfig",
     },
     config = function()
-      -- Setup mason-lspconfig
-      require("mason-lspconfig").setup({
-        -- Automatically install these servers
-        ensure_installed = {
-          "lua_ls",           -- Lua
-          "pylsp",            -- Python
-        },
+      local mason_lspconfig = require("mason-lspconfig")
 
-        -- Automatically enable installed servers
-        automatic_enable = false,         -- We'll set them up manually
+      -- Servidores que queremos instalar automáticamente
+      mason_lspconfig.setup({
+        ensure_installed = {
+          "lua_ls",             -- Lua
+          "pylsp",              -- Python
+        },
+        automatic_installation = true,
       })
 
-      -- Wait for Mason to be ready, then configure servers
+      local function setup_servers()
+        local servers = {
+          "lua_ls",
+          "pylsp",
+        }
+
+        for _, server in ipairs(servers) do
+          local ok, srv = pcall(require, "lsp-servers." .. server)
+          if ok and srv.setup then
+            srv.setup()
+          end
+        end
+      end
+
+      -- Configurar servidores cuando Mason haya terminado
       vim.api.nvim_create_autocmd("User", {
         pattern = "MasonLspSetup",
-        callback = function()
-          -- Configure the servers after Mason has installed them
-          require("lsp-servers.lua_ls").setup()
-          require("lsp-servers.pylsp").setup()
-        end,
+        callback = setup_servers,
       })
 
-      -- Also set them up after a delay to be safe
-      vim.defer_fn(function()
-        require("lsp-servers.lua_ls").setup()
-        require("lsp-servers.pylsp").setup()
-      end, 1000)       -- 1 second delay
+      -- También configurar después de un pequeño delay por si acaso
+      vim.defer_fn(setup_servers, 1000)
 
-      -- Command to manually trigger server setup
-      vim.api.nvim_create_user_command("LspSetup", function()
-        require("lsp-servers.lua_ls").setup()
-        require("lsp-servers.pylsp").setup()
-        vim.notify("LSP servers configured", vim.log.levels.INFO)
-      end, { desc = "Manually setup LSP servers" })
+      -- Comando para configurar manualmente
+      vim.api.nvim_create_user_command("LspSetup", setup_servers, {
+        desc = "Manually setup LSP servers",
+      })
     end,
   },
 }

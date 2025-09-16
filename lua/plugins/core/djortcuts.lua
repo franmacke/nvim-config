@@ -1,7 +1,7 @@
 return {
   {
     "franmacke/djortcuts.nvim",
-    lazy = false,
+    lazy = true,
     priority = 1000,
     config = function()
       local django_automation = require("djortcuts")
@@ -17,15 +17,6 @@ return {
       { "<leader>jc",  "<cmd>DjangoCollectstatic<cr>",     desc = "Django Collect Static" },
       { "<leader>jk",  "<cmd>DjangoCheck<cr>",             desc = "Django Check" },
       { "<leader>jC",  "<cmd>DjangoManagementCommand<cr>", desc = "Django Management Command" },
-    },
-    dependencies = {
-      "folke/which-key.nvim",
-      opts = {
-        spec = {
-          { "<leader>j", group = "djortcuts", icon = { icon = "⚡" } },
-          { "<leader>jm", group = "Migrations" },
-        },
-      },
     },
   },
 }
