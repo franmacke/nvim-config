@@ -1,10 +1,10 @@
 return {
-  -- Core functionality
-  { import = "plugins.core" },
+	-- Core functionality
+	{ import = "plugins.core" },
 
-  -- UI plugins
-  { import = "plugins.ui" },
+	-- UI plugins
+	{ import = "plugins.ui" },
 
-  -- LSP plugins
-  { import = "plugins.lsp" },
+	-- LSP plugins
+	{ import = "plugins.helpers" },
 }
