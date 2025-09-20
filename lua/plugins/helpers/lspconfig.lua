@@ -71,6 +71,22 @@ return {
 					[vim.diagnostic.severity.INFO] = " ",
 				},
 			},
+			virtual_text = {
+				spacing = 2,
+				source = "if_many",
+				format = function(d)
+					local sev = vim.diagnostic.severity
+					local prefix = ({ [sev.ERROR] = "E", [sev.WARN] = "W", [sev.INFO] = "I", [sev.HINT] = "H" })[d.severity]
+						or ""
+					local code = d.code or (d.user_data and d.user_data.lsp and d.user_data.lsp.code)
+					if code then
+						return string.format("%s: %s (%s)", prefix, d.message, code)
+					end
+					return string.format("%s: %s", prefix, d.message)
+				end,
+			},
+			severity_sort = true,
+			update_in_insert = false,
 		})
 
 		vim.lsp.config("*", {
@@ -107,6 +123,33 @@ return {
 						typeCheckingMode = "basic",
 						autoSearchPaths = true,
 						useLibraryCodeForTypes = true,
+					},
+				},
+			},
+		})
+
+		vim.lsp.config("rust_analyzer", {
+			capabilities = capabilities,
+			settings = {
+				["rust-analyzer"] = {
+					assist = {
+						importGranularity = "module",
+						importPrefix = "self",
+					},
+					diagnostics = {
+						enable = true,
+						enableExperimental = true,
+					},
+					cargo = {
+						loadOutDirsFromCheck = true,
+					},
+					procMacro = {
+						enable = true,
+					},
+					inlayHints = {
+						chainingHints = true,
+						parameterHints = true,
+						typeHints = true,
 					},
 				},
 			},

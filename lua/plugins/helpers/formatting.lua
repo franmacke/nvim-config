@@ -8,8 +8,7 @@ return {
 		conform.setup({
 			formatters_by_ft = {
 				lua = { "stylua" },
-				python = { "isort", "black" },
-				rust = { "rustfmt", lsp_format = "fallback" },
+				python = { "isort", "black", "docformatter" },
 				javascript = { "prettierd", "prettier", stop_after_first = true },
 				typescript = { "prettierd", "prettier", stop_after_first = true },
 				javascriptreact = { "prettierd", "prettier", stop_after_first = true },
@@ -17,7 +16,7 @@ return {
 				css = { "prettier" },
 				html = { { "djlint", "prettier" } },
 				json = { "prettier" },
-				yaml = { "prettier" },
+				yaml = { "yamlfmt" },
 				markdown = { "prettier" },
 				htmldjango = { "djlint" },
 			},

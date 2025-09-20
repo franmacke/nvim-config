@@ -21,9 +21,14 @@ return {
 		mason_lspconfig.setup({
 			ensure_installed = {
 				"lua_ls", -- Lua
-				"pylsp", -- Python
+				"pyright", -- Python
 				"html",
 				"cssls",
+				"ts_ls",
+				"yaml-language-server",
+				"rust-analyzer",
+				"dockerfile-language-server",
+				"docker-language-server",
 			},
 			automatic_installation = true,
 		})
