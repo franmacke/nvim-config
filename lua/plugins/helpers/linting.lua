@@ -7,6 +7,14 @@ return {
 	config = function()
 		local lint = require("lint")
 
+		lint.linters.pylint.cmd = "python"
+		lint.linters.pylint.args = {
+			"-m",
+			"pylint",
+			"-f",
+			"json",
+		}
+
 		lint.linters_by_ft = {
 			javascript = { "eslint_d" },
 			python = { "pylint" },
