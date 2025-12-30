@@ -5,11 +5,19 @@ return {
     'nvim-lua/plenary.nvim',
     { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make' },
   },
+  keys = {
+    -- Files & Fuzzy Search (<leader>f)
+    { "<leader>ff", function() require("telescope.builtin").find_files() end,  desc = "Find Files" },
+    { "<leader>fg", function() require("telescope.builtin").live_grep() end,   desc = "Live Grep" },
+    { "<leader>fb", function() require("telescope.builtin").buffers() end,     desc = "Buffers" },
+    { "<leader>fh", function() require("telescope.builtin").help_tags() end,   desc = "Help Tags" },
+    { "<leader>fw", function() require("telescope.builtin").grep_string() end, desc = "Current Word" },
+    { "<leader>fr", function() require("telescope.builtin").resume() end,      desc = "Resume last picker" },
+    { "<leader>fo", function() require("telescope.builtin").oldfiles() end,    desc = "Recent Files" },
+  },
   config = function()
     local telescope = require("telescope")
     local actions = require("telescope.actions")
-    local builtin = require("telescope.builtin")
-    local themes = require("telescope.themes")
 
     telescope.setup({
       defaults = {
@@ -39,17 +47,6 @@ return {
       }
     })
 
-    -- cargar extensión fzf
     telescope.load_extension("fzf")
-
-    -- Keymaps principales
-    vim.keymap.set("n", "<leader><CR>", builtin.find_files, { desc = "Find Files" })
-    vim.keymap.set("n", "<leader>y", builtin.live_grep, { desc = "Live Grep" })
-    vim.keymap.set("n", "<leader>fb", builtin.buffers, { desc = "Buffers" })
-    vim.keymap.set("n", "<leader>fh", builtin.help_tags, { desc = "Help Tags" })
-    vim.keymap.set("n", "<leader>fw", builtin.grep_string, { desc = "Current Word" })
-    vim.keymap.set("n", "<leader>fd", builtin.diagnostics, { desc = "Diagnostics" })
-    vim.keymap.set("n", "<leader>fr", builtin.resume, { desc = "Resume last picker" })
-    vim.keymap.set("n", "<leader>f.", builtin.oldfiles, { desc = "Recent Files" })
   end,
 }

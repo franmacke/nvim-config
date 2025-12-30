@@ -6,6 +6,26 @@ return {
     "theHamsta/nvim-dap-virtual-text",
     "nvim-neotest/nvim-nio",
   },
+  keys = {
+    -- Debug controls (<leader>d)
+    { "<leader>dt", function() require("dapui").toggle() end,                                                         desc = "Debug: Toggle UI" },
+    { "<leader>db", function() require("dap").toggle_breakpoint() end,                                                desc = "Debug: Toggle Breakpoint" },
+    { "<leader>dB", function() require("dap").set_breakpoint(vim.fn.input("Breakpoint condition: ")) end,             desc = "Debug: Set Breakpoint with Condition" },
+    { "<leader>dl", function() require("dap").set_breakpoint(nil, nil, vim.fn.input("Log point message: ")) end,      desc = "Debug: Set Log Point" },
+    { "<leader>dr", function() require("dap").repl.open() end,                                                        desc = "Debug: Open REPL" },
+    { "<leader>dL", function() require("dap").run_last() end,                                                         desc = "Debug: Run Last" },
+    { "<leader>dh", function() require("dap.ui.widgets").hover() end,                                                 desc = "Debug: Hover Variable" },
+    { "<leader>dp", function() require("dap.ui.widgets").preview() end,                                               desc = "Debug: Preview Variable" },
+    { "<leader>ds", function()
+      local widgets = require("dap.ui.widgets"); widgets.centered_float(widgets.scopes)
+    end,                                                                                                              desc = "Debug: Scopes" },
+
+    -- Function keys (standard debug controls - sin leader)
+    { "<F5>",       function() require("dap").continue() end,                                                         desc = "Debug: Start/Continue" },
+    { "<F10>",      function() require("dap").step_over() end,                                                        desc = "Debug: Step Over" },
+    { "<F11>",      function() require("dap").step_into() end,                                                        desc = "Debug: Step Into" },
+    { "<F12>",      function() require("dap").step_out() end,                                                         desc = "Debug: Step Out" },
+  },
   config = function()
     local dap = require("dap")
     local dapui = require("dapui")
@@ -14,7 +34,6 @@ return {
     dapui.setup({
       icons = { expanded = "▾", collapsed = "▸", current_frame = "▸" },
       mappings = {
-        -- Use a table to apply multiple mappings
         expand = { "<CR>", "<2-LeftMouse>" },
         open = "o",
         remove = "d",
@@ -62,6 +81,7 @@ return {
       console = "integratedTerminal",
       include_configs = true,
     })
+
     -- Eventos automáticos para DAP UI
     dap.listeners.after.event_initialized["dapui_config"] = function()
       dapui.open()
@@ -91,32 +111,6 @@ return {
       virt_lines = false,
       virt_text_win_col = nil,
     })
-
-    -- Keymaps para debugging
-    vim.keymap.set("n", "<F5>", dap.continue, { desc = "Debug: Start/Continue" })
-    vim.keymap.set("n", "<F1>", dap.step_over, { desc = "Debug: Step Over" })
-    vim.keymap.set("n", "<F2>", dap.step_into, { desc = "Debug: Step Into" })
-    vim.keymap.set("n", "<F3>", dap.step_out, { desc = "Debug: Step Out" })
-    vim.keymap.set("n", "<leader>b", dap.toggle_breakpoint, { desc = "Debug: Toggle Breakpoint" })
-    vim.keymap.set("n", "<leader>B", function()
-      dap.set_breakpoint(vim.fn.input("Breakpoint condition: "))
-    end, { desc = "Debug: Set Breakpoint with Condition" })
-    vim.keymap.set("n", "<leader>lp", function()
-      dap.set_breakpoint(nil, nil, vim.fn.input("Log point message: "))
-    end, { desc = "Debug: Set Log Point" })
-    vim.keymap.set("n", "<leader>dr", dap.repl.open, { desc = "Debug: Open REPL" })
-    vim.keymap.set("n", "<leader>dl", dap.run_last, { desc = "Debug: Run Last" })
-    vim.keymap.set("n", "<leader>du", dapui.toggle, { desc = "Debug: Toggle UI" })
-    vim.keymap.set("n", "<leader>dh", function()
-      require("dap.ui.widgets").hover()
-    end, { desc = "Debug: Hover" })
-    vim.keymap.set("n", "<leader>dH", function()
-      require("dap.ui.widgets").preview()
-    end, { desc = "Debug: Preview" })
-    vim.keymap.set("n", "<leader>ds", function()
-      local widgets = require("dap.ui.widgets")
-      widgets.centered_float(widgets.scopes)
-    end, { desc = "Debug: Scopes" })
 
     -- Signos para breakpoints
     vim.fn.sign_define("DapBreakpoint", { text = "🔴", texthl = "DapBreakpoint", linehl = "", numhl = "" })
